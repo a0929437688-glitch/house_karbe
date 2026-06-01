@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>房貸試算 × 黃恃紘 卡比老師</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans TC',sans-serif;background:#FFF8EE;color:#3A2000;min-height:100vh;max-width:430px;margin:0 auto;}
+
+.header{background:linear-gradient(155deg,#FFAA00 0%,#FFD060 55%,#FFECB0 100%);padding:26px 20px 22px;position:relative;overflow:hidden;}
+.header::before{content:'';position:absolute;top:-50px;right:-50px;width:200px;height:200px;background:rgba(255,255,255,0.15);border-radius:50%;}
+.header::after{content:'🏡';position:absolute;bottom:10px;right:18px;font-size:48px;opacity:0.18;}
+.brand{font-size:11px;font-weight:700;color:#7A4000;letter-spacing:2px;margin-bottom:6px;}
+.header h1{font-size:23px;font-weight:900;color:#3A1600;line-height:1.3;}
+.header h1 em{color:#A04800;font-style:normal;}
+.header-sub{font-size:12px;color:#7A4000;margin-top:5px;}
+
+.agent-card{margin:14px 16px 0;background:#FFFFFF;border-radius:18px;padding:14px 16px;display:flex;align-items:center;gap:14px;box-shadow:0 4px 18px rgba(255,170,0,0.18);border:1.5px solid #FFDC7A;}
+.agent-photo{width:58px;height:58px;border-radius:50%;object-fit:cover;object-position:top center;flex-shrink:0;border:3px solid #FFDC7A;box-shadow:0 2px 10px rgba(255,170,0,0.3);}
+.agent-name{font-size:16px;font-weight:900;color:#3A1600;}
+.agent-tag{display:inline-block;background:#FFF3D0;border:1px solid #FFD060;border-radius:20px;padding:2px 10px;font-size:10px;font-weight:700;color:#A04800;margin-top:3px;}
+.agent-phone{display:inline-flex;align-items:center;gap:5px;margin-top:7px;padding:5px 12px;background:#FFF5D8;border-radius:20px;font-size:12px;font-weight:700;color:#A04800;border:1px solid #FFDC7A;}
+
+.section{padding:16px 16px 4px;}
+.section-label{font-size:11px;font-weight:700;color:#8A5020;letter-spacing:1.5px;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.section-label::before{content:'';width:4px;height:14px;background:linear-gradient(#FFAA00,#FFD166);border-radius:4px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.form-full{grid-column:1/-1;}
+.field label{font-size:11px;font-weight:600;color:#8A5020;display:block;margin-bottom:4px;}
+.input-wrap{position:relative;}
+.input-wrap input,.input-wrap select{width:100%;background:#FFFDF5;border:1.5px solid #FFCC66;border-radius:10px;padding:9px 38px 9px 12px;font-size:14px;font-family:inherit;color:#3A1600;outline:none;transition:border 0.2s,box-shadow 0.2s;-webkit-appearance:none;}
+.input-wrap input:focus,.input-wrap select:focus{border-color:#FFAA00;box-shadow:0 0 0 3px rgba(255,170,0,0.12);}
+.input-unit{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;color:#B08040;pointer-events:none;}
+
+.slider-block{margin-top:4px;}
+.slider-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;}
+.slider-top span{font-size:11px;font-weight:600;color:#8A5020;}
+.slider-top strong{font-size:17px;font-weight:900;color:#A04800;}
+input[type=range]{width:100%;height:6px;-webkit-appearance:none;appearance:none;background:linear-gradient(to right,#FFAA00,#FFD166);border-radius:10px;outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:#FFAA00;border:3px solid #FFFFFF;box-shadow:0 2px 8px rgba(255,170,0,0.5);cursor:grab;}
+.slider-ticks{display:flex;justify-content:space-between;margin-top:5px;}
+.slider-ticks span{font-size:9px;color:#B08040;text-align:center;flex:1;}
+
+/* ─── RESULT HERO ─── */
+.result-hero{margin:14px 16px 0;background:linear-gradient(145deg,#FF9500 0%,#FFAA00 40%,#FFD166 100%);border-radius:18px;padding:18px;position:relative;overflow:hidden;}
+.rh-label{font-size:11px;font-weight:700;color:#7A3A00;letter-spacing:1px;margin-bottom:10px;}
+.rh-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.rh-item{background:rgba(255,255,255,0.35);border-radius:12px;padding:10px 12px;border:1px solid rgba(255,255,255,0.5);}
+.rh-item .lbl{font-size:10px;color:#7A3A00;margin-bottom:3px;}
+.rh-item .val{font-size:18px;font-weight:900;color:#3A1600;line-height:1.1;}
+.rh-item .val small{font-size:11px;font-weight:400;}
+
+/* ─── COMPARE TABLE ─── */
+.compare-wrap{margin:12px 16px 0;}
+.compare-title{font-size:11px;font-weight:700;color:#8A5020;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.compare-title::before{content:'';width:4px;height:14px;background:linear-gradient(#FFAA00,#FFD166);border-radius:4px;}
+
+/* Rich comparison table like image 2 */
+.rich-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:14px;overflow:hidden;border:1.5px solid #E8D08A;background:#FFFFFF;}
+.rich-table .th-blank{background:#F5EDD0;border-right:1px solid #E8D08A;}
+.rich-table .th-p1{background:#3A2800;color:#FFFFFF;text-align:center;padding:10px 6px;font-size:12px;font-weight:700;}
+.rich-table .th-p2{background:#FFAA00;color:#3A1600;text-align:center;padding:10px 6px;font-size:12px;font-weight:700;}
+.rich-table .th-p2 span{font-size:10px;display:block;font-weight:600;margin-top:1px;}
+.rich-table td{padding:9px 8px;font-size:12px;border-top:1px solid #F0E4B0;vertical-align:middle;}.rich-table thead td{border-top:none;}
+.rich-table .row-label{background:#FFFFFF;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:#6A4820;padding:9px 10px;}
+.rich-table .row-label .icon{font-size:14px;}
+.rich-table .cell-p1{background:#FFFFFF !important;text-align:center;color:#3A2000;border-left:1px solid #F0E4B0;}
+.rich-table .cell-p2{background:#FDFAF0;text-align:center;color:#3A2000;border-left:1px solid #F0E4B0;}
+.rich-table .val-big{font-size:14px;font-weight:900;color:#3A1600;display:block;}
+.rich-table .val-sub{font-size:9px;color:#8A6030;display:block;margin-top:1px;}
+.rich-table .val-red{font-size:14px;font-weight:900;color:#C0351B;display:block;}
+.rich-table .val-green{font-size:14px;font-weight:900;color:#1A7A40;display:block;}
+.rich-table .val-gold{font-size:14px;font-weight:900;color:#A04800;display:block;}
+.badge-green{display:inline-block;background:#1A7A40;color:#FFFFFF;font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;margin-top:3px;}
+.badge-orange{display:inline-block;background:#C05000;color:#FFFFFF;font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;margin-top:3px;}
+.badge-label-row td{padding:0;border:none !important;}
+.badge-label-row .inner{background:#FFF3D0;padding:5px 10px;font-size:10px;font-weight:700;color:#8A5020;letter-spacing:0.5px;display:block;}
+
+/* ─── SAVING ─── */
+.saving-banner{margin:10px 16px 0;background:#FFFAED;border:1.5px solid #FFD166;border-radius:14px;padding:14px;display:none;}
+.sb-row{display:flex;align-items:flex-start;gap:10px;}
+.sb-emoji{font-size:22px;flex-shrink:0;margin-top:1px;}
+.sb-main{font-size:13px;font-weight:700;color:#A04800;}
+.sb-sub{font-size:11px;color:#8A5020;margin-top:4px;line-height:1.7;}
+
+/* ─── BUTTONS ─── */
+.action-bar{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px;}
+.btn{padding:13px;border-radius:12px;border:none;cursor:pointer;font-size:13px;font-weight:700;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:7px;transition:transform 0.12s;}
+.btn:active{transform:scale(0.96);}
+.btn-copy{background:#3A1600;color:#FFD166;box-shadow:0 3px 12px rgba(58,22,0,0.28);}
+.btn-img{background:linear-gradient(135deg,#FFAA00,#FFD166);color:#3A1600;box-shadow:0 3px 12px rgba(255,170,0,0.38);}
+.btn svg{width:16px;height:16px;flex-shrink:0;}
+
+.toast{position:fixed;top:24px;left:50%;transform:translateX(-50%);background:#3A1600;color:#FFD166;padding:9px 22px;border-radius:24px;font-size:12px;font-weight:700;z-index:9999;opacity:0;pointer-events:none;transition:opacity 0.25s;white-space:nowrap;}
+.toast.show{opacity:1;}
+.loading-overlay{position:fixed;inset:0;background:rgba(255,250,230,0.92);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:9998;}
+.loading-overlay.show{display:flex;}
+.loading-spinner{width:44px;height:44px;border:4px solid #FFE0A0;border-top-color:#FFAA00;border-radius:50%;animation:spin 0.8s linear infinite;}
+.loading-text{margin-top:14px;font-size:14px;font-weight:700;color:#A04800;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.divider{height:1px;background:linear-gradient(to right,transparent,#FFDC7A,transparent);margin:4px 16px;}
+.footer{text-align:center;padding:10px 20px 24px;font-size:10px;color:#B08040;line-height:1.7;border-top:1px solid #FFE8A0;margin-top:8px;}
+
+/* ─── IMAGE CARD ─── */
+#imgCard{position:absolute;top:-9999px;left:0;width:390px;background:#FFF8EE;font-family:'Noto Sans TC',sans-serif;padding-bottom:24px;overflow:visible;}
+.ic-header{background:linear-gradient(145deg,#FFAA00 0%,#FFD060 60%,#FFECB0 100%);padding:20px 18px 16px;position:relative;overflow:hidden;}
+.ic-header::before{content:'';position:absolute;top:-35px;right:-35px;width:160px;height:160px;background:rgba(255,255,255,0.15);border-radius:50%;}
+.ic-header::after{content:'🏡';position:absolute;bottom:8px;right:16px;font-size:40px;opacity:0.18;}
+.ic-brand{font-size:10px;color:#7A4000;font-weight:700;letter-spacing:2px;margin-bottom:3px;}
+.ic-title{font-size:18px;font-weight:900;color:#3A1600;line-height:1.25;}
+
+
+.ic-agent{margin:12px 14px 0;background:#FFFFFF;border-radius:12px;padding:11px 13px;display:flex;align-items:center;gap:11px;border:1.5px solid #FFDC7A;}
+.ic-av-photo{width:48px;height:48px;border-radius:50%;object-fit:cover;object-position:top center;border:2.5px solid #FFDC7A;flex-shrink:0;}
+.ic-an{font-size:14px;font-weight:900;color:#3A1600;}
+.ic-at{font-size:10px;color:#9A6020;margin-top:1px;}
+.ic-ap{font-size:11px;font-weight:700;color:#A04800;margin-top:4px;}
+
+.ic-hero{margin:10px 14px 0;background:linear-gradient(135deg,#FF9500,#FFAA00,#FFD166);border-radius:13px;padding:12px 14px;position:relative;overflow:hidden;}
+.ic-hero-lbl{font-size:10px;color:#7A3A00;font-weight:700;letter-spacing:1px;margin-bottom:7px;}
+.ic-hgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.ic-hitem{background:rgba(255,255,255,0.32);border-radius:9px;padding:7px 9px;}
+.ic-hitem .l{font-size:9px;color:#7A3A00;margin-bottom:2px;}
+.ic-hitem .v{font-size:16px;font-weight:900;color:#3A1600;line-height:1.1;}
+.ic-hitem .v small{font-size:9px;font-weight:400;}
+
+.ic-sec{font-size:10px;font-weight:700;color:#8A5020;letter-spacing:1px;margin:9px 14px 6px;display:flex;align-items:center;gap:5px;}
+.ic-sec::before{content:'';display:inline-block;width:3px;height:11px;background:#FFAA00;border-radius:3px;}
+
+.ic-rich-table{width:calc(100% - 28px);margin:0 14px;border-collapse:separate;border-spacing:0;border-radius:12px;overflow:hidden;border:1px solid #E8D08A;background:#FFFFFF;}
+.ic-rich-table .th-blank{background:#F5EDD0;}
+.ic-rich-table .th-p1{background:#3A2800;color:#FFF;text-align:center;padding:8px 5px;font-size:10px;font-weight:700;}
+.ic-rich-table .th-p2{background:#FFAA00;color:#3A1600;text-align:center;padding:8px 5px;font-size:10px;font-weight:700;}
+.ic-rich-table td{padding:7px 6px;font-size:11px;border-top:1px solid #F0E4B0;vertical-align:middle;}.ic-rich-table thead td{border-top:none;}
+.ic-rich-table .row-label{background:#FFFFFF;font-size:10px;font-weight:600;color:#6A4820;padding:7px 8px;}
+.ic-rich-table .cell-p1{background:#FFF;text-align:center;border-left:1px solid #F0E4B0;}
+.ic-rich-table .cell-p2{background:#FFFBEE;text-align:center;border-left:1px solid #F0E4B0;}
+.ic-vbig{font-size:13px;font-weight:900;color:#3A1600;display:block;}
+.ic-vsub{font-size:9px;color:#8A6030;display:block;margin-top:1px;}
+.ic-vred{font-size:13px;font-weight:900;color:#C0351B;display:block;}
+.ic-vgreen{font-size:13px;font-weight:900;color:#1A7A40;display:block;}
+.ic-vgold{font-size:13px;font-weight:900;color:#A04800;display:block;}
+.ic-badge-g{display:inline-block;background:#1A7A40;color:#FFF;font-size:8px;font-weight:700;padding:1px 5px;border-radius:8px;margin-top:2px;}
+.ic-badge-o{display:inline-block;background:#C05000;color:#FFF;font-size:8px;font-weight:700;padding:1px 5px;border-radius:8px;margin-top:2px;}
+
+.ic-saving{margin:8px 14px 0;background:#FFFAED;border:1px solid #FFD166;border-radius:11px;padding:9px 12px;}
+.ic-saving-main{font-size:11px;font-weight:700;color:#A04800;}
+.ic-saving-sub{font-size:9px;color:#8A5020;margin-top:2px;line-height:1.5;}
+.ic-note{text-align:center;font-size:9px;color:#B08040;margin-top:9px;padding:0 14px;line-height:1.5;}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">正在產生圖片⋯</div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="brand">永慶不動產 · 房貸試算工具</div>
+  <h1>月付多少？<br><em>立即試算，一目了然</em></h1>
+  <div class="header-sub">無寬限 vs 寬限期方案 完整對照</div>
+</div>
+
+<!-- AGENT -->
+<div class="agent-card">
+  <img class="agent-photo" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCADcANwDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD1cClxS4pcVqITFKBQBTsUAGKUCjFFABRS4paAExRilxRigAxRilooATFLilxRigBuKWlxRQAlGKWigAxSYp1JTASilooASiloxQAlIRS0lACcUUYooERilAoApcUhhS0AUtABilopaAExRilFLigBKXFFGKACilxiigAoxS0UAJiilxRQAmKWjFFACUUtGKAEoopaAEpKdSYoATFJTiKSgQmKKWkpgRgU7FAFLSGFAFGKWgAopaAKAAUoFFLQAlLRiloASloooAKKKKACijgUCgAooooAKSlooEJiloooGFJilooAQikp1JigBtFLRigQzFLRS4oGIBS0UooAAKWiloATFLRRQAUUVh+LfFum+ENNa+1KYxpyEAUtubHTigDakkSJC7sqqOpJwBXmGvfG+y0XxHJbrALrRootjXsWT/pHZc9NnbPrXjHxB+K2r+J2e3N5cJZs24QZAU45HA7fXJrh7rW766ieO5upZAxyVLnaT2OOlS5Fcp7tdftMS27XDR6DHPEFzCwmKn23Z7fTmual/aN8UahIZI/sdg0eCIY49yN65ycmvI98ZjVJQ2z7ysOSp7inKsLNhWYEjAJGBmlzMLH0H4d/aJu4rGRvEumRS3MoD2a2GB5g6HeCxC4x17+lem+BvHtp40tZ2W2lsb21YLcWkxBZMjKsD3UjvXxXt8p9kkYDDqQcZrd0DxlrPh++F9Y6hdwOdoLpJywHRWzkEfUU+YLH3ACCKWvEvAv7QVve3Fvp/iJ41MuEF6sfl7GPaRckY/2l/ECvbFIYAg5z3qrktWFoxS4oxQAlFGKKBBSUtFAxMUdKWkNACUUUUCG0DmgClpDCloxxRRcApcUCl+lMApKcKKQGfrmrR6Jpc986NKYwAkSnBlcnCoPqSP1NfJnxE8R6l4i8Uzz6jdeelrkKsbEwqQPuqPQHv3xXuXx08QjStM0+zVwJZ3eQD6DaCfoWJ/CvmvUd8tz5cRLbfvseSx9KmT6FxXUx5Q01u8zZ3buc96c8AaxgnYDcWZfqBipmjw3lFT82Onepvs0shCAArGNqj+Fc/wAzUXK5Sg21IQHHOSwHtVnTrqOFQsi5Ru56imfYpJZWOd4Hcd6b9ldmCgYxzRcLFrUbZTNFJHghxtIz3H+Iqug8gMrZMTdD6fWnpIQg384OGWo5vm3EHrzRcVhE3Qtk4ZR1B6GvpT9nz4hvq+m/8IxqVwZLq0TdayO2WeL+4fUr29vpXzTHlkYk8g1seGfEV54X1211axIW4tZA4HUMO6sO4I/nTTsK1z7kFBrM8Ma/beJtEtdUthtSdAxTOdhxyM9+talakCUYpSKTFAhDRilooGJSU6koASk/GnU2gQlKBR0opDClFGKWgApelA6UdaACkb2pcUEcUAfNXx5mkfxqkTXE83kRRcORhAxLYUAcDpXnkUQiieRlHyqGJ9WPNejfH3Sriw8YJfySgRX0C7SoyRtOD179K8suLt3KxwyMEIAHPccZNZT3N4LQmmthvRs/vZBnn+v+fStCLSJY7UDaWkk+VB9f/rVpeF/hh4w1eP8AtK30x/I3Bla4bbv9ODyRWtL4S8TW+pI99Y7kTI2xEAc9sDoKxlNdzop032OW+wGBoIgoCytsz04H+R+dU7u0jt7hEI+Y9RXoz+FrgwvNdQE7vuAcBfoa5TUfB2ralfBLKEybQAGB5znrURqq+5rOg0tEcjMVRy2zKnNVUjwAWBwen0rvYvg94kkR5biS3jOOFYn5v8KyPEXgq78O2hmZxKqEZxyK0VRdGYOjJK9jn1VI42BxnGR79j/MVW3bihHpimzS4wCOO3tmhfux56s3FanPax9Sfsz373XgS7tpNxa0v3QMT1DIrD8q9bxXmH7OdnHb/DeO4QfNd3k8jn1wwQfoteoVpHYzluJRS4oqhCYpKdSEUCEopaSgY3FLS0mKBDaUcUYpaQwoopaAClHFAooAKKKMUAeJ/tN2Ekml6LeIhKRyyxuw/hyqkfyNZf7PfgyyvbS98RX9vHOVl8iBJFDBcAFm578gfnXs3jOytL3w3fLeWkV2kcbOscq7huAIBx+JrF+Fmkx6XoL2sMSxIZ2lCKOBuVTxXJiZfZO/C03y+06bFjVL7xRc/aItItbazgSNik1zgvM+OAE6Kv8AtHP0rjPDkPjC9vDFr32F5mc4+z4O0dskcH06D1r1u+tEZdroCD3NRWVra2yt5aKpx2Fcju1Y7YtJ8yMHxHp0EPh6bEa70BIOPauD0a1ulgRrN44maUGaQkbkj77AQQWPbPA969L8SIH0qVeitkVxPhQhb0254PO0etTsy47HJ6xb+KotWvJ18SWo00sfs0EuHcr2DYHX1x+FVLnTLjVNOePUbfasq4YZyPwr2qTT4Nh3wx57EqOK5LxMkUSkKAKcpN6iilayPnLxj4UGloZ7dcwoQD7CuShimmnVY43cr8oCqTz2H517N4uhSbTbpXwEIGT6DIrPvrc6fZRyWEnkAgMPJ4Bx0JI610wqtROeWE9pPTQ+h/ht4Yfwf4I0nRpcefBDunx/z1clmH4E4/CunrI8I3V1feFtJur4EXU1rG8mepJHX+tbGK7lqkeVNWk0xKAKCKKZIhFJTqQigBKDS4ooAbRS4oxQAwUtFFIYoo70UAUALS4oFKaAExS4pKKAEdBIjI4BVhgg9xVGyhXTcRKMKoAH0HStDrVTUF/dBh1BxmufEwvHm7HVharjLk6MlvtRRrckDkDFZkBvXtri7hg851QiOLON5qvdB1tFZn2qOXNV7PxjHHFsSwvmAGVbyGCN9Gxg/hXAnzPU9SMHtFHO+JdS8Xr4aVr3Soortt2Y7eQuig9MkgH61w+kz+JLn7MLm3W2uIZN3mxkhWGewPP1r0bWvGsvkSu9qzMFwiCGQ9eueK8+u/Gt1AwD6RdsP7whZT+oqnHsbeynFXaPUzqkn2GMzkF9oyR3rgvEurmaUqDVvTdduNa0zzTbTW+0YIlGDXJancb5m5yc1ne7sQlZFfUIVu7KaMgHepBq74B8HzeK76OxnJFlbYkuXU5wvGEz6nFXvCnhq/8AEVxGsVvIbTftmuMfJGOpB98dq9r0jRbDQbMWenWyQQg5IHVj6se5rroUnLV7HLWxSpJqO7/AtxRJBEkUahERQqqOgAGAKdRRXeeOFBopaAG0UUUAFIaWkNABSc0UtADKWgUUhhSikpe1MBR0paOvNBpAFBFHeigBaZLGJY2Q9GH5U+ih6gnbU5q5mMU32eUfdbketazCO8twCoHcEdqp+KLQyWqXUYxLG23PqD2rJ07xJHCPJuTsYeteVOHs52PZpTdSCktxdck1JgwWUsqjaM8HFeeX+nTG5M1xKXPbPavQtU1m2dCwmQjHrXAa3rVuA3zj8DUuTZ0xm7WK9xrf2GzMEfHBH51yz3m6Tk5JNVtQ1Y3EpWIE0yzt3L+ZJzTUerM3K+x9C/DO1S38HWTKuGmLysfUliP5AV1FYXgSPZ4O0getuD+ZJrer1YL3UeJUd5sSilpKogKM0UGgQHmkpaQ0AJiloopDG0uaDQPrTENooopDAUtFApgKOKUZoxQKQAKWiimAUUUUgK+pW7T2EpAyI8M30zj+tclqWhR3qEhfmr0zQ7VJ47jzMMrjyiv4Z/wrnNT0qTTLpoXBKHmN/wC8P8a4sVTd+Y9DB1Ulynjut+HryLd5csgH1rkLrR52f97I7D0Jr3PWIYmhYlRmvPtTtFkkYovFct2d+6OJTT0hPC809UxwBz0AraksXMixpGzO5CqijLMfQDua7Xw18OzppTUdZRTcj5orU8iI+r+re3atKdOU3ZGVSrGmrs7XwbHJbeH7Szm/1lvGqEHtx0/nW3Xm/jjVdU8O+H7nXdIn2XWm4uWjbmO4jBw8bjuCCTnqCARXQfD/AOIej/EPSRe6c/l3EYAubN2/eQN7+qns3f2PFemlbQ8aWrudTTSKdSUyRKM0UUhhRRRQIMU2nUlMYGk/ClooEMoFApRQMKBRS/WkAtJS0jMERnZgqqMlicAfU0ALmlzXE+IfjB4S8P70F/8A2jcrx5NiPM59C/3R+deWeJPjz4j1XdDpMUOjwHgMn7yYj/eIwPwH407Ae7674l0fwxa/adY1CCyjP3RIfmf2VRy34CvIfGP7QEkyvaeFbZoQeDfXKjeP9xOg+rflXkN7e3eo3LXV9cz3Vw/3pZnLsfxNRKOaYWPrP9m+9bUPh/LPPcSXF22pTtcSSOWZmIQgkn2xXpmoWEOo27QzLweQw6qfUV4n+ypeB9E8QWXeK7hm/BoyP/ZK9vvLqO0i3yHknCqOrH0FZyaSblsUr8ytueaeJtJn092inXcrD5JRwr/4H2rmbTw1eazOILODe3Uk8Kg9Sewr1W7sptTlWa4u5kiXkW6hfLJ9WyMt+Jx7VVs3Tw7LKWujJaykEx7EUQn14A/z6V5fPScr30PUVWaja2pS0DwLY+HE8/aJ74rhrhh932Qfwj9T+lRanEq7jXS3V0rxB0YMrDIYHII9a4bxbrEenWckrtjAJr1oRSVkeZKTk7yPLPjl4zs9J8L3GiQyq1/qK+UIx1WLPzsfbjA9z7V8/wDh7xFqnhbVYdU0m8ktLqI/K6dx3Vh0KnuDxV/xLqU3iXW7zVJ3JeeQlM/woOFH0xWJLEUODQxH1L8Pf2gdB8Swx2mvyQ6NqfClnOLeY+qsfuH2b8Ca9WV1kRXRlZGGVZTkMPUHvXwABjiux8E/EvxN4LIXSdRcWwOWs5x5kDf8BP3fquKExWPs+krynwd+0L4f1vy7bXozol2ePMYl7Zz/AL3Vf+BDHvXqcE8VzCs9vLHNC4yskbBlYexHBoESUUUUAFNp1NpgHelzSUZoAaKWkpaQC1U1TVLTRdOuNRv5hDbW6GSRz2HsO5PQD1NWq8p/aE1drXw5YaXHJg3twZJFHdIx/Lcw/KmgMDVf2jr25ikTRtDhtiWYJPdSmQ7c8HYABn2yR9a8613xf4g8TsW1jVrm6UnIhLbYl+iDC/pWLbqPLx6MR+tTYpjsJgAYFQyLv4/lUp6UADrQAyJHUfMd3oT1qUdaKWkM+gP2UN3neKG6RhLXk+uZP6V3UnjMal49ls3yLWKJobb3cEFmPuccew968q/Zk1i4i8Sato67fs93Ak78c7k3Ac+nzGvdY/CFn9skuzCvmucl+4rlxVJ1YOCZtRmoS5mX7mcR2u9gduOoryrxl4l8y7MMLlY4+ZT7dxXba3Zm80dHE9ymV5xOyKo9cKa8sn0j/SyglnkiZsEytuY8Hkn+leByupUhFu2x6cOWMZS3N74W+MLrUdN1GyuLdltrYmS0cnkITyje/wDEPqRXMfF3Vni8MXsxcjzMW8fuzn/4kMa9U8I+F7aw0IwRRqGkjILEdSRXh/7RM40+XSNCDAMiPeTAHufkTP4Bj+NfTUo8kFHseTVkpSbPE9uO1MmjDcdTUjNxmkXrnvVEGdIrB2RIySO7cCnW8Uivudh9AKuSqDj19aiHyvtOM9frSAnCAitPQfFeveE5vN0XVLqy5yUjf5G+qn5T+IrNXpSOaYHtvhT9piZNlv4o0wSjobuy+VvqYzwfwI+lez+G/FmieLrMXeiahDeR/wASqcPGfRkPKn618SMPTrTF1O5sLqOWyuZbeaJgyyxOVYMO4IouKx96UVznw88Rv4t8FaRrMpBnuLcCbH/PVSVf8ypP410VFxBRS02mISlpO1A60hi188/tAXbTeMYIC3yW9nGAPQsWY/0r6Gr5Y+MGrjV/iDqhTGy3cWy477BtJ/PNNAcjC+HmX0YH8xUobNU0fbc4/vx/qD/9erMbZIoGSn0pF6UgPWgcNTAXvS0negmgD1D9ne5+z+ObjnBe1Vf/AB+vqx3EcDPnAVSSa+PPgpceR8QIADjfAfxwy19ZatclbSOBTzKQD9K561RU4yk+hpGPM0kUNQjD6WiDoBn6mvPNUSO2YsePnxXpd4MWJwMkLwK8z1qMnzdxy56e1fNzdq0JeaPVp6wkvU9G8MSGXToxnJwAK+QvjL4gHiL4gazdq+6FJzbQn/Yj+QfmQT+NfTcWujw/8P7/AFljg2dnJIuf74XCj/voivi6/maSUlmLMTlie57mvqlseO9xiI8udqM20ZO0E4HqaQkpyeRXrXwi+J/hXwR4du7TVbK7F68rSebBD5nnrxhevBGCMH5ec15VqF2t9f3d2sC20c88kqQL0iVmJC/gCBURk22mimkkrMqyyYHB696ito95aY9+F9hTZMzSCMdDy30qwWCJirIH7gBUDzZNNaWqzPzjNAywZMIz+nA+tZzvhs1YnfaiJ/wI/jVVxuB9aliPrP8AZrvjd/DURnpb386D6Ha382Neq188/sna3x4g0N2/55XsY/NG/wDZK+hqqOwmIaSlpDTEIKBQKO9AxS4Qbz0X5j+FfF2p3LXl/dXjnL3EzynP+0xP9a+x9WYx6Veupwy28pB99hr4ym7fSgEVpfleF/R8fmKsI1V7n/j3J9GU/rUqGgZZVuKVjjBxUYJxTwM8UAP75oJ4pqH5BSnpQB0vwxuvsfj/AEqQnG4SL+mf6V9avP8AaJ4iegQEfU18a+F5Gh8VaQ6HDecR/wCOmvr7SnMkNuzdTGp/SvLzObVO3do7MKru5r3p22RJOc15fr8pBnbONoJzXpmpk/Yj9K86vYkay1CZhl8SxjP8IC54968mUb1I+R2U3aLMD4561/YXw50/RY2xLqkyyOB/zyjAY/mxT8q+ZZHLyE16v+0DqNxceIdNtpHzFbaVbiNfTcCzH8T/ACFeSLya+pPIJlPGabK4CEk4AGTS9BVe6OWiTszc/hQIdENibm+83J9vamSSE0+U8VXcnikMR3wtQx/vJVXsTz9KSZjikt/vMe4Q0hCzuXdm9TURNOc1ETSA9J/Z81n+x/ilpqk4i1FJLJ/qy5X/AMeVa+ws18H+CbqSy8Y6FcRY3x6hbsM9P9YtfeLjDMB2JFVEGNoooqhH/9k=" alt="卡比老師">
+  <div>
+    <div class="agent-name">黃恃紘</div>
+    <div class="agent-tag">🏠 房市顧問 卡比老師</div>
+    <div class="agent-phone">📞 0929-437-688</div>
+  </div>
+</div>
+
+<!-- FORM -->
+<div class="section">
+  <div class="section-label">物件資訊</div>
+  <div class="form-grid">
+    <div class="field form-full">
+      <label>社區 / 地址（選填）</label>
+      <div class="input-wrap"><input type="text" id="addr" placeholder="如：桃園市○○社區"></div>
+    </div>
+    <div class="field">
+      <label>房屋總價</label>
+      <div class="input-wrap"><input type="number" id="price" value="1550" min="100" step="10"><span class="input-unit">萬</span></div>
+    </div>
+    <div class="field">
+      <label>年利率</label>
+      <div class="input-wrap"><input type="number" id="rate" value="2.5" min="0.1" max="10" step="0.1"><span class="input-unit">%</span></div>
+    </div>
+    <div class="field form-full">
+      <label>貸款年限</label>
+      <div class="input-wrap">
+        <select id="years"><option value="20">20 年</option><option value="30" selected>30 年</option><option value="40">40 年</option></select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">貸款成數設定</div>
+  <div class="slider-block">
+    <div class="slider-top"><span>成數</span><strong id="ltvLabel">8 成</strong></div>
+    <input type="range" id="ltv" min="4" max="8.5" step="0.5" value="8">
+    <div class="slider-ticks"><span>4成</span><span>4.5</span><span>5成</span><span>5.5</span><span>6成</span><span>6.5</span><span>7成</span><span>7.5</span><span>8成</span><span>8.5</span></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">寬限期設定</div>
+  <div class="slider-block">
+    <div class="slider-top"><span>寬限年數</span><strong id="graceLabel">3 年</strong></div>
+    <input type="range" id="grace" min="0" max="5" step="1" value="3">
+    <div class="slider-ticks"><span>無</span><span>1年</span><span>2年</span><span>3年</span><span>4年</span><span>5年</span></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- RESULT HERO -->
+<div class="result-hero" id="heroArea"></div>
+
+<!-- COMPARE TABLE -->
+<div class="compare-wrap">
+  <div class="compare-title">方案對照表</div>
+  <table class="rich-table">
+    <thead>
+      <tr>
+        <td class="th-blank" style="width:32%"></td>
+        <td class="th-p1" style="width:34%">方案一<br><span style="font-size:10px;opacity:0.8">無寬限期</span></td>
+        <td class="th-p2" style="width:34%" id="th-p2-head">方案二<br><span>3年寬限期</span></td>
+      </tr>
+    </thead>
+    <tbody id="richBody"></tbody>
+  </table>
+</div>
+
+<!-- SAVING -->
+<div class="saving-banner" id="savingBanner">
+  <div class="sb-row">
+    <span class="sb-emoji">💰</span>
+    <div><div class="sb-main" id="sbMain"></div><div class="sb-sub" id="sbSub"></div></div>
+  </div>
+</div>
+
+<!-- ACTIONS -->
+<div class="action-bar">
+  <button class="btn btn-copy" onclick="doCopy()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+    一鍵複製
+  </button>
+  <button class="btn btn-img" onclick="doSaveImg()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    產生圖片
+  </button>
+</div>
+
+<div class="footer">
+  ＊本試算僅供參考，實際貸款條件以銀行核准結果為準<br>
+  ＊利率為假設值，依各銀行方案及個人條件有所不同
+</div>
+
+<!-- HIDDEN IMAGE CARD -->
+<div id="imgCard">
+  <div class="ic-header">
+    <div class="ic-brand">永慶不動產 · 房貸試算報告</div>
+    <div class="ic-title">🏡 月付多少？一眼看清楚</div>
+  </div>
+  <div id="ic-addr-bar" style="display:none;background:#FFF3D0;padding:7px 14px;border-bottom:1px solid #FFD088;">
+    <span id="ic-addr" style="font-size:12px;font-weight:700;color:#7A3A00;"></span>
+  </div>
+  <div class="ic-agent">
+    <img class="ic-av-photo" src="data:image/jpeg;base64,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" alt="卡比老師">
+    <div>
+      <div class="ic-an">黃恃紘</div>
+      <div class="ic-at">🏠 房市顧問 卡比老師 · 永慶不動產</div>
+      <div class="ic-ap">📞 0929-437-688</div>
+    </div>
+  </div>
+  <div class="ic-hero">
+    <div class="ic-hero-lbl">📊 試算結果摘要</div>
+    <div class="ic-hgrid" id="ic-hgrid"></div>
+  </div>
+  <div class="ic-sec">方案對照表</div>
+  <table class="ic-rich-table">
+    <thead>
+      <tr>
+        <td class="th-blank" style="width:30%"></td>
+        <td class="th-p1" style="width:35%">方案一 無寬限</td>
+        <td class="th-p2" style="width:35%" id="ic-p2head">方案二 3年寬限</td>
+      </tr>
+    </thead>
+    <tbody id="ic-richBody"></tbody>
+  </table>
+  <div id="ic-saving" class="ic-saving" style="display:none">
+    <div class="ic-saving-main" id="ic-sbMain"></div>
+    <div class="ic-saving-sub" id="ic-sbSub"></div>
+  </div>
+  <div class="ic-note">＊本試算僅供參考，實際貸款條件以銀行核准為準 · 2026.06.01 製</div>
+</div>
+
+<script>
+function fmt(n){return Math.round(n).toLocaleString('zh-TW');}
+function fmtW(n){return (Math.round(n/10000*10)/10).toFixed(1);}
+function calcPI(p,r,m){var mr=r/100/12;if(mr===0)return p/m;return p*mr*Math.pow(1+mr,m)/(Math.pow(1+mr,m)-1);}
+function calcIO(p,r){return p*r/100/12;}
+var gP=1550,gR=2.5,gY=30,gL=8,gG=3;
+
+function buildRichRows(loan,p1,pg,p2,i1,i2){
+  var rows='';
+  if(gG>0){
+    // header label row
+    rows+='<tr class="badge-label-row"><td colspan="3"><div class="inner">💡 還款方式比較</div></td></tr>';
+    rows+='<tr><td class="row-label"><span class="icon">💰</span>貸款金額</td><td class="cell-p1"><span class="val-gold">'+fmt(loan)+'萬</span></td><td class="cell-p2"><span class="val-gold">'+fmt(loan)+'萬</span></td></tr>';
+    rows+='<tr><td class="row-label"><span class="icon">📊</span>利率／年限</td><td class="cell-p1"><span class="val-big">'+gR+'%</span><span class="val-sub">'+gY+'年 本利攤還</span></td><td class="cell-p2"><span class="val-big">'+gR+'%</span><span class="val-sub">'+gY+'年 本利攤還</span></td></tr>';
+    rows+='<tr><td class="row-label"><span class="icon">📅</span>前'+gG+'年月付</td><td class="cell-p1"><span class="val-red">'+fmt(p1)+'元</span><span class="val-sub">直接本利攤還</span></td><td class="cell-p2"><span class="val-green">'+fmt(pg)+'元</span><span class="val-sub">僅繳利息</span><br><span class="badge-green">壓力較小！</span></td></tr>';
+    rows+='<tr><td class="row-label"><span class="icon">📅</span>第'+(gG+1)+'年起月付</td><td class="cell-p1"><span class="val-big">'+fmt(p1)+'元</span><span class="val-sub">持續到第'+gY+'年</span></td><td class="cell-p2"><span class="val-red">'+fmt(p2)+'元</span><span class="val-sub">剩'+(gY-gG)+'年攤還本金</span><br><span class="badge-orange">開始攤還本金</span></td></tr>';
+    rows+='<tr><td class="row-label"><span class="icon">💵</span>總利息支出</td><td class="cell-p1"><span class="val-green">較少 👑</span></td><td class="cell-p2"><span style="color:#8A6030;font-size:12px">較多</span></td></tr>';
+    rows+='<tr><td class="row-label"><span class="icon">💧</span>現金流壓力</td><td class="cell-p1"><span style="color:#555;font-size:12px">較平均</span></td><td class="cell-p2"><span class="val-green">前期較輕鬆</span></td></tr>';
+  } else {
+    rows+='<tr><td class="row-label"><span class="icon">💰</span>貸款金額</td><td class="cell-p1"><span class="val-gold">'+fmt(loan)+'萬</span></td><td class="cell-p2"><span class="val-gold">'+fmt(loan)+'萬</span></td></tr>';
+    rows+='<tr><td class="row-label"><span class="icon">📊</span>利率／年限</td><td class="cell-p1"><span class="val-big">'+gR+'%</span><span class="val-sub">'+gY+'年</span></td><td class="cell-p2"><span class="val-big">'+gR+'%</span><span class="val-sub">'+gY+'年</span></td></tr>';
+    rows+='<tr><td class="row-label"><span class="icon">📅</span>每月月付</td><td class="cell-p1"><span class="val-gold">'+fmt(p1)+'元</span></td><td class="cell-p2" style="color:#B08040;font-size:11px">請設定寬限期</td></tr>';
+    rows+='<tr><td class="row-label"><span class="icon">💵</span>總利息支出</td><td class="cell-p1"><span class="val-green">'+fmtW(i1)+'萬</span></td><td class="cell-p2">—</td></tr>';
+  }
+  return rows;
+}
+
+function buildImgRows(loan,p1,pg,p2,i1,i2){
+  var rows='';
+  if(gG>0){
+    rows+='<tr><td class="row-label">💰 貸款金額</td><td class="cell-p1"><span class="ic-vgold">'+fmt(loan)+'萬</span></td><td class="cell-p2"><span class="ic-vgold">'+fmt(loan)+'萬</span></td></tr>';
+    rows+='<tr><td class="row-label">📊 利率/年限</td><td class="cell-p1"><span class="ic-vbig">'+gR+'%/'+gY+'年</span></td><td class="cell-p2"><span class="ic-vbig">'+gR+'%/'+gY+'年</span></td></tr>';
+    rows+='<tr><td class="row-label">📅 前'+gG+'年月付</td><td class="cell-p1"><span class="ic-vred">'+fmt(p1)+'元</span><span class="ic-vsub">本利攤還</span></td><td class="cell-p2"><span class="ic-vgreen">'+fmt(pg)+'元</span><span class="ic-vsub">僅繳利息</span><span class="ic-badge-g">壓力較小</span></td></tr>';
+    rows+='<tr><td class="row-label">📅 第'+(gG+1)+'年起</td><td class="cell-p1"><span class="ic-vbig">'+fmt(p1)+'元</span></td><td class="cell-p2"><span class="ic-vred">'+fmt(p2)+'元</span><span class="ic-badge-o">攤還本金</span></td></tr>';
+    rows+='<tr><td class="row-label">💵 總利息</td><td class="cell-p1"><span class="ic-vgreen">較少 👑</span></td><td class="cell-p2" style="color:#8A6030;font-size:11px">較多</td></tr>';
+    rows+='<tr><td class="row-label">💧 現金流</td><td class="cell-p1" style="font-size:11px;color:#555">較平均</td><td class="cell-p2"><span class="ic-vgreen">前期輕鬆</span></td></tr>';
+  } else {
+    rows+='<tr><td class="row-label">💰 貸款金額</td><td class="cell-p1"><span class="ic-vgold">'+fmt(loan)+'萬</span></td><td class="cell-p2"><span class="ic-vgold">'+fmt(loan)+'萬</span></td></tr>';
+    rows+='<tr><td class="row-label">📅 每月月付</td><td class="cell-p1"><span class="ic-vgold">'+fmt(p1)+'元</span></td><td class="cell-p2" style="color:#B08040;font-size:10px">請設定寬限期</td></tr>';
+    rows+='<tr><td class="row-label">💵 總利息</td><td class="cell-p1"><span class="ic-vgreen">'+fmtW(i1)+'萬</span></td><td class="cell-p2">—</td></tr>';
+  }
+  return rows;
+}
+
+function calc(){
+  gP=parseFloat(document.getElementById('price').value)||1550;
+  gR=parseFloat(document.getElementById('rate').value)||2.5;
+  gY=parseInt(document.getElementById('years').value)||30;
+  gL=parseFloat(document.getElementById('ltv').value)||8;
+  gG=parseInt(document.getElementById('grace').value)||0;
+
+  document.getElementById('ltvLabel').textContent=gL+'成';
+  document.getElementById('graceLabel').textContent=gG===0?'無寬限期':gG+'年';
+
+  var tM=gY*12, loan=gP*gL/10, dn=gP-loan, ly=loan*10000;
+  var p1=calcPI(ly,gR,tM);
+  var pg=gG>0?calcIO(ly,gR):0;
+  var pm=tM-gG*12;
+  var p2=gG>0?calcPI(ly,gR,pm):0;
+  var i1=p1*tM-ly, i2=gG>0?(pg*gG*12+p2*pm)-ly:0;
+  var sv=gG>0?(p1-pg)*gG*12:0;
+
+  // plan2 header
+  var p2label=gG>0?gG+'年寬限期':'設定寬限期';
+  document.getElementById('th-p2-head').innerHTML='方案二<br><span>'+p2label+'</span>';
+
+  // hero
+  document.getElementById('heroArea').innerHTML='<div class="rh-label">📊 試算結果一覽</div><div class="rh-grid"><div class="rh-item"><div class="lbl">房屋總價</div><div class="val">'+fmt(gP)+'<small>萬</small></div></div><div class="rh-item"><div class="lbl">貸款（'+gL+'成）</div><div class="val">'+fmt(loan)+'<small>萬</small></div></div><div class="rh-item"><div class="lbl">自備款</div><div class="val">'+fmt(dn)+'<small>萬</small></div><div style="font-size:9px;color:#7A3A00;margin-top:2px;">不含規費及仲介費</div></div><div class="rh-item"><div class="lbl">'+(gG>0?'前'+gG+'年月付':'月付')+'</div><div class="val">'+fmt(gG>0?pg:p1)+'<small>元</small></div></div></div>';
+
+  // rich table
+  document.getElementById('richBody').innerHTML=buildRichRows(loan,p1,pg,p2,i1,i2);
+
+  // saving
+  var bn=document.getElementById('savingBanner');
+  if(gG>0&&sv>0){
+    bn.style.display='block';
+    document.getElementById('sbMain').textContent='選擇'+gG+'年寬限期，前期共省下 '+fmtW(sv)+' 萬元現金流！';
+    document.getElementById('sbSub').innerHTML='每月少繳 '+fmt(p1-pg)+' 元 × '+gG*12+' 個月<br>可用於裝潢、家電、子女教育金、投資理財⋯';
+  } else {bn.style.display='none';}
+
+  // sync imgCard
+  var addr=document.getElementById('addr').value.trim();
+  document.getElementById('ic-addr').textContent=addr?'📍 '+addr:'';
+  var addrBar=document.getElementById('ic-addr-bar');
+  if(addrBar)addrBar.style.display=addr?'block':'none';
+  document.getElementById('ic-p2head').textContent='方案二 '+(gG>0?gG+'年寬限':'');
+  document.getElementById('ic-hgrid').innerHTML='<div class="ic-hitem"><div class="l">房屋總價</div><div class="v">'+fmt(gP)+'<small>萬</small></div></div><div class="ic-hitem"><div class="l">貸款（'+gL+'成）</div><div class="v">'+fmt(loan)+'<small>萬</small></div></div><div class="ic-hitem"><div class="l">自備款</div><div class="v">'+fmt(dn)+'<small>萬</small></div><div style="font-size:8px;color:#7A3A00;margin-top:1px;">不含規費及仲介費</div></div><div class="ic-hitem"><div class="l">'+(gG>0?'前'+gG+'年月付':'月付')+'</div><div class="v">'+fmt(gG>0?pg:p1)+'<small>元</small></div></div>';
+  document.getElementById('ic-richBody').innerHTML=buildImgRows(loan,p1,pg,p2,i1,i2);
+  var ics=document.getElementById('ic-saving');
+  if(gG>0&&sv>0){ics.style.display='block';document.getElementById('ic-sbMain').textContent='💰 寬限期共省下約 '+fmtW(sv)+' 萬元現金流';document.getElementById('ic-sbSub').textContent='每月少繳 '+fmt(p1-pg)+' 元 × '+gG*12+' 個月，可靈活用於裝潢、家電、投資⋯';}else{ics.style.display='none';}
+}
+
+document.getElementById('grace').addEventListener('input',calc);
+document.getElementById('ltv').addEventListener('input',calc);
+['price','rate','years'].forEach(function(id){document.getElementById(id).addEventListener('input',calc);document.getElementById(id).addEventListener('change',calc);});
+calc();
+
+function getTextReport(){
+  var loan=gP*gL/10,dn=gP-loan,ly=loan*10000,tM=gY*12;
+  var p1=calcPI(ly,gR,tM),pg=gG>0?calcIO(ly,gR):0,pm=tM-gG*12,p2=gG>0?calcPI(ly,gR,pm):0;
+  var sv=gG>0?(p1-pg)*gG*12:0;
+  var addr=document.getElementById('addr').value.trim();
+  var t='🏡 房貸試算報告\n━━━━━━━━━━━━━━━\n';
+  if(addr)t+='📍 物件：'+addr+'\n';
+  t+='💰 房屋總價：'+fmt(gP)+' 萬元\n🏦 貸款金額（'+gL+'成）：'+fmt(loan)+' 萬元\n💵 自備款（頭期款）：'+fmt(dn)+' 萬元（不含規費及仲介費）\n📊 利率：'+gR+'% ／ 年限：'+gY+' 年\n━━━━━━━━━━━━━━━\n\n【方案一】無寬限期\n月付：約 '+fmt(p1)+' 元（本利攤還）\n';
+  if(gG>0){t+='\n【方案二】'+gG+'年寬限期\n前'+gG+'年月付：約 '+fmt(pg)+' 元（僅繳利息）\n第'+(gG+1)+'年起月付：約 '+fmt(p2)+' 元\n';if(sv>0)t+='\n💡 寬限期共省下約 '+fmtW(sv)+' 萬元現金流\n（每月少繳 '+fmt(p1-pg)+' 元 × '+gG*12+' 個月）\n';}
+  t+='\n━━━━━━━━━━━━━━━\n👨‍💼 黃恃紘 · 房市顧問 卡比老師\n永慶不動產\n📞 0929-437-688\n\n＊本試算僅供參考，實際以銀行核准為準';
+  return t;
+}
+
+function doCopy(){var txt=getTextReport();if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(function(){showToast('✅ 已複製！可直接貼到 LINE');},function(){legacyCopy(txt);});}else{legacyCopy(txt);}}
+function legacyCopy(txt){var ta=document.createElement('textarea');ta.value=txt;ta.style.cssText='position:fixed;opacity:0;top:0;left:0';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');showToast('✅ 已複製！');}catch(e){showToast('⚠️ 請手動複製');}document.body.removeChild(ta);}
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2500);}
+
+function doSaveImg(){
+  var ov=document.getElementById('loadingOverlay');
+  ov.classList.add('show');
+  setTimeout(function(){
+    renderCardToCanvas(function(dataUrl){
+      ov.classList.remove('show');
+      showImageModal(dataUrl);
+    });
+  },100);
+}
+
+function renderCardToCanvas(callback){
+  // Force sync address to imgCard right before capture
+  var addr=document.getElementById('addr').value.trim();
+  document.getElementById('ic-addr').textContent=addr?'📍 '+addr:'';
+  var ab=document.getElementById('ic-addr-bar');
+  if(ab)ab.style.display=addr?'block':'none';
+  var addrBar=document.getElementById('ic-addr-bar');
+  if(addrBar)addrBar.style.display=addr?'block':'none';
+  // Use html2canvas on imgCard but with proper visibility trick
+  var card=document.getElementById('imgCard');
+  // Temporarily make it visible in viewport for capture
+  var prev=card.getAttribute('style');
+  card.style.cssText='position:absolute;top:0;left:0;width:390px;z-index:-999;visibility:visible;opacity:1;';
+  // Force a reflow
+  card.offsetHeight;
+  html2canvas(card,{
+    scale:2.5,
+    useCORS:true,
+    allowTaint:true,
+    backgroundColor:'#FFF8EE',
+    logging:false,
+    width:390,
+    scrollX:0,
+    scrollY:0,
+    windowWidth:390,
+    onclone:function(doc){
+      var c=doc.getElementById('imgCard');
+      if(c){
+        c.style.cssText='position:static !important;top:0 !important;left:0 !important;width:390px;opacity:1 !important;visibility:visible !important;display:block !important;';
+      }
+      doc.body.style.cssText='width:390px;max-width:390px;overflow:visible;background:#FFF8EE;';
+    }
+  }).then(function(canvas){
+    card.style.cssText=prev||'position:fixed;top:-9999px;left:-9999px;width:390px;';
+    callback(canvas.toDataURL('image/png'));
+  }).catch(function(e){
+    card.style.cssText=prev||'position:fixed;top:-9999px;left:-9999px;width:390px;';
+    console.error(e);
+    showToast('⚠️ 請改用手機截圖儲存');
+  });
+}
+
+function showImageModal(dataUrl){
+  var modal=document.getElementById('imgModal');
+  var preview=document.getElementById('imgPreview');
+  preview.src=dataUrl;
+  modal.style.display='flex';
+  document.body.style.overflow='hidden';
+}
+
+function closeImageModal(){
+  document.getElementById('imgModal').style.display='none';
+  document.body.style.overflow='';
+}
+
+
+</script>
+
+<!-- IMAGE MODAL -->
+<div id="imgModal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.88);flex-direction:column;align-items:center;justify-content:flex-start;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+  <div style="width:100%;max-width:430px;padding:0 0 32px;">
+    <!-- top bar -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px;">
+      <div style="font-size:13px;font-weight:700;color:#FFD166;">📲 長按圖片儲存到相簿</div>
+      <button onclick="closeImageModal()" style="background:rgba(255,255,255,0.12);border:none;color:#FFFFFF;font-size:13px;font-weight:700;padding:7px 14px;border-radius:20px;cursor:pointer;font-family:inherit;">關閉</button>
+    </div>
+    <!-- hint bar -->
+    <div style="margin:0 16px 10px;background:rgba(255,209,102,0.15);border:1px solid rgba(255,209,102,0.4);border-radius:10px;padding:10px 14px;font-size:12px;color:#FFD166;line-height:1.7;">
+      <strong>iOS：</strong>長按圖片 → 儲存到「相片」<br>
+      <strong>Android：</strong>長按圖片 → 下載圖片
+    </div>
+    <!-- image -->
+    <div style="margin:0 16px;border-radius:14px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+      <img id="imgPreview" src="" alt="房貸試算圖" style="width:100%;display:block;-webkit-touch-callout:default !important;user-select:auto !important;">
+    </div>
+    <div style="text-align:center;margin-top:14px;font-size:11px;color:rgba(255,255,255,0.4);">點「關閉」返回試算</div>
+  </div>
+</div>
+</body>
+</html>
